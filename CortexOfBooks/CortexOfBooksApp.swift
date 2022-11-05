@@ -9,9 +9,10 @@ import SwiftUI
 
 @main
 struct CortexOfBooksApp: App {
-    var body: some Scene {
-        WindowGroup {
-            ContentView()
-        }
+  var body: some Scene {
+    WindowGroup {
+      ContentView()
+        .environment(\.managedObjectContext, CoreDataProvider.shared.viewContext)
     }
+  }
 }

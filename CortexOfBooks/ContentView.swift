@@ -7,20 +7,41 @@
 
 import SwiftUI
 
-struct ContentView: View {
-    var body: some View {
-        VStack {
-            Image(systemName: "globe")
-                .imageScale(.large)
-                .foregroundColor(.accentColor)
-            Text("Hello, world!")
-        }
-        .padding()
+private extension ReadingStatus {
+  var systemImage: String {
+    switch self {
+    case .reading:
+      return "book.fill"
+    case .willRead:
+      return "bookmark.fill"
+    case .haveRead:
+      return "book.closed.fill"
     }
+  }
+}
+
+struct ContentView: View {
+  @AppStorage("readingStatus")
+  var readingStatus: ReadingStatus = .reading
+  
+  var body: some View {
+    TabView(selection: $readingStatus) {
+      Group {
+        ForEach(ReadingStatus.allCases) { status in
+          BooksByReadingStatusScreen(readingStatus: status)
+            .tabItem {
+              Label(status.rawValue, systemImage: status.systemImage)
+            }
+        }
+        .toolbar(.visible, for: .tabBar)
+        .toolbarBackground(.ultraThinMaterial, for: .tabBar)
+      }
+    }
+  }
 }
 
 struct ContentView_Previews: PreviewProvider {
-    static var previews: some View {
-        ContentView()
-    }
+  static var previews: some View {
+    ContentView()
+  }
 }
